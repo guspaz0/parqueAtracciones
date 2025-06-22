@@ -1,0 +1,33 @@
+import { Atraccion } from "../abstracts/atraccion.entity";
+import { IAtraccion } from "../interfaces/IAtraccion";
+
+export class Parque implements IAtraccion {
+    private costoFijoAcumulado: number = 0;
+    private costoVariableAcumulado: number = 0;
+    private ingresosAcumulados: number = 0;
+    private precioKwh!: number;
+
+    protected atracciones: Atraccion[] = [];
+
+    agregarAtraccion(atraccion: Atraccion){
+        this.atracciones.push(atraccion)
+    }
+
+    calcularCostoOperacion(): number {
+        throw new Error("Method not implemented.");
+    }
+
+    listarAtracciones(){
+        this.atracciones.forEach(a => a.mostrarInformacion())
+    }
+
+    desactivarAtraccion(nombre: string) {
+        const indice = this.atracciones.findIndex(e => e.nombre == nombre)
+        this.atracciones[indice].desactivar()
+    }
+
+    activarAtraccion(nombre: string) {
+        const indice = this.atracciones.findIndex(e => e.nombre == nombre)
+        this.atracciones[indice].activar()
+    }
+}
