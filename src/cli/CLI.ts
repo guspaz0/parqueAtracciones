@@ -1,3 +1,4 @@
+import { Atraccion } from "../abstracts/atraccion.entity";
 import { Parque } from "../entidades/Parque";
 import { TipoAtraccion } from "../types/Atracciones.enum";
 import { MainMenuOpt } from "../types/MenuPricipal";
@@ -90,7 +91,7 @@ export class CLI {
         throw new Error("Method not implemented.");
     }
     private agregarNuevaAtraccion() {
-        const opciones = Array.from(Object.keys(TipoAtraccion))
+        const opciones = Array.from(Object.values(TipoAtraccion))
         console.clear();
         function header(){
             console.log(`
@@ -99,9 +100,34 @@ export class CLI {
             \r├────────────────────────────────────────────────────────────────┤`);
         }
         header()
-        console.log(`
-            \r└────────────────────────────────────────────────────────────────┘`)
+        opciones.forEach((opt,i)=> console.log(`\r│  ${(i+1).toString().padEnd(2)}. ${opt.padEnd(57)} │`))
+        console.log(`\r└────────────────────────────────────────────────────────────────┘`)
 
+        const tipo = readLineSync.questionInt('\nSelecciona el tipo de atraccion: ');
+    
+        if (tipo < 1 || tipo > opciones.length) {
+            throw new Error('Tipo de atracción no válido');
+        }
+        
+        const nombre = readLineSync.question('Nombre de la atraccion: ');
+        const precio = readLineSync.questionFloat('Precio base de entrada: $');
+        const capacidad = readLineSync.questionInt('Capacidad máxima de personas: ');
+
+        let nuevaAtraccion: Atraccion;
+        switch(tipo){
+            case opciones.indexOf(TipoAtraccion.CARRUSEL)+1:
+                console.log(TipoAtraccion.CARRUSEL)
+                break
+            case opciones.indexOf(TipoAtraccion.LA_CASA_DEL_TERROR)+1:
+                console.log(TipoAtraccion.LA_CASA_DEL_TERROR)
+                break
+            case opciones.indexOf(TipoAtraccion.MONTANA_RUSA)+1:
+                console.log(TipoAtraccion.MONTANA_RUSA)
+                break
+            default:
+                throw new Error("Tipo de atraccion no valido")
+                break
+        }
     }
 
     private salir(): void {
