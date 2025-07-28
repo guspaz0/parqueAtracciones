@@ -1,10 +1,10 @@
 export abstract class Atraccion {
-    readonly nombre: string;
+    readonly nombre: string = "";
     /**
      * Precio base de entrado por persona
      */
-    protected precioBaseEntrada!: number;
-    protected readonly capacidadMaximaDePersonas: number;
+    protected precioBaseEntrada: number = 0;
+    protected readonly capacidadMaximaDePersonas: number = 100;
     /**
      * cantidad de personas que actualmente se encuentren en la atracción. 
      */

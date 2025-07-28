@@ -1,4 +1,5 @@
 import { Atraccion } from "../abstracts/atraccion.entity";
+import { Carrusel } from "../entidades/carrusel";
 import { Parque } from "../entidades/Parque";
 import { TipoAtraccion } from "../types/Atracciones.enum";
 import { MainMenuOpt } from "../types/MenuPricipal";
@@ -9,6 +10,24 @@ export class CLI {
 
     constructor (parque: Parque) {
         this.parque = parque;
+    }
+    public BuildMenu(title: string, options: Map<string, string>){
+        console.clear()
+        const tableMidLength = 100/2
+        const paddingInline = tableMidLength-(title.length/2)
+        const padStartTable = title.slice(0,title.length/2).toString().padStart(paddingInline)
+        const padEndTable = title.slice(title.length/2).toString().padEnd(paddingInline)
+        console.log(`
+            \r┌${"─".repeat(76)}┐
+            \r│${padStartTable+padEndTable}│
+            \r├${"─".repeat(76)}┤`)
+        Array.from(options.entries()).forEach(([key,value],i)=> {
+            let optionId = (i+1).toString().padEnd(1);
+            let optionKey = key.padEnd(value? 48/2 : 48)
+            let opcionValue = value?.padEnd(48/2)
+            console.log(`\r│${optionId}. ${optionKey} ${opcionValue}│`)
+        })
+        console.log(`\r└${"─".repeat(76)}┘`)
     }
     public mostrarMenuPrincipal(): void {
         const opciones = new Map<MainMenuOpt, string>([
@@ -90,38 +109,43 @@ export class CLI {
     private verEstadoAtracciones() {
         throw new Error("Method not implemented.");
     }
+
     private agregarNuevaAtraccion() {
-        const opciones = Array.from(Object.values(TipoAtraccion))
-        console.clear();
-        function header(){
-            console.log(`
-            \r┌────────────────────────────────────────────────────────────────┐
-            \r│                     AGREGAR NUEVA ATRACCIÓN                    │
-            \r├────────────────────────────────────────────────────────────────┤`);
-        }
-        header()
-        opciones.forEach((opt,i)=> console.log(`\r│  ${(i+1).toString().padEnd(2)}. ${opt.padEnd(57)} │`))
-        console.log(`\r└────────────────────────────────────────────────────────────────┘`)
+        let nuevaAtraccion: Atraccion;
+        const tiposAtraccion = Array.from(Object.values(TipoAtraccion))
+        const mapOpt = new Map(tiposAtraccion.map(e => ([e,''])))
+
+        const update = (instance) => Object.assign(Object.create(instance), nuevaAtraccion)
+        
+        this.BuildMenu("AGREGAR NUEVA ATRACCIÓN", mapOpt)
+        update(Atraccion)
+        console.log(nuevaAtraccion)
 
         const tipo = readLineSync.questionInt('\nSelecciona el tipo de atraccion: ');
     
-        if (tipo < 1 || tipo > opciones.length) {
+        if (tipo < 1 || tipo > tiposAtraccion.length) {
             throw new Error('Tipo de atracción no válido');
         }
-        
+        const menuInputValues = new Map<string,string | number>([
+            ["Nombre", ""],
+            ["Precio", ""]
+        ])
+
+
         const nombre = readLineSync.question('Nombre de la atraccion: ');
         const precio = readLineSync.questionFloat('Precio base de entrada: $');
         const capacidad = readLineSync.questionInt('Capacidad máxima de personas: ');
 
-        let nuevaAtraccion: Atraccion;
+        
         switch(tipo){
-            case opciones.indexOf(TipoAtraccion.CARRUSEL)+1:
+            case tiposAtraccion.indexOf(TipoAtraccion.CARRUSEL)+1:
                 console.log(TipoAtraccion.CARRUSEL)
+                //nuevaAtraccion = new Carrusel()
                 break
-            case opciones.indexOf(TipoAtraccion.LA_CASA_DEL_TERROR)+1:
+            case tiposAtraccion.indexOf(TipoAtraccion.LA_CASA_DEL_TERROR)+1:
                 console.log(TipoAtraccion.LA_CASA_DEL_TERROR)
                 break
-            case opciones.indexOf(TipoAtraccion.MONTANA_RUSA)+1:
+            case tiposAtraccion.indexOf(TipoAtraccion.MONTANA_RUSA)+1:
                 console.log(TipoAtraccion.MONTANA_RUSA)
                 break
             default:
