@@ -1,3 +1,5 @@
+import { ConsumoEnergia } from "./consumoEnergia";
+
 export abstract class Atraccion {
     readonly nombre: string = "";
     /**
@@ -11,18 +13,40 @@ export abstract class Atraccion {
     protected cantidadPersonasActuales: number = 0;
     private estado: boolean = false; // (activa o inactiva)
 
-    constructor(nombre: string, capacidadMaximaDePersonas: number){
+    /**
+     * Consumo de energia de la atraccion
+     */
+    private energia: ConsumoEnergia;
+    /**
+     * Constructor de la clase Atraccion
+     * @param nombre Nombre de la atracción
+     * @param capacidadMaximaDePersonas Capacidad máxima de personas que pueden ingresar a la atracción
+     * @param energia Consumo de energía asociado a la atracción
+     */
+    constructor(nombre: string, capacidadMaximaDePersonas: number, energia: ConsumoEnergia) {
         this.nombre = nombre;
         this.capacidadMaximaDePersonas = capacidadMaximaDePersonas;
+        this.energia = energia;
     }
 
+    /**
+     * valída y activa la atraccion
+     */
     activar() {
         this.estado = true
-    } 
+    }
+    /**
+     * valída y desactiva la atraccion
+     */
+
     desactivar() {
         this.estado = false
     }
-    ingresarPersonas(cantidad: number) {
+    /**
+     * valida si hay bancos/asientos/cupos disponibles e ingresa personas a la atraccion
+     * @param cantidad numero de personas a ingresar
+     */
+    ingresarPersonas(cantidad: number): void {
         if (!this.estado) throw new Error("No se puede ingresar personas, la atraccion esta inactiva")
         if ((this.cantidadPersonasActuales + cantidad) <= this.capacidadMaximaDePersonas){
             this.cantidadPersonasActuales += cantidad
@@ -31,25 +55,24 @@ export abstract class Atraccion {
         }
     }
     /**
-     * imprime el estado de la atracción
+     * devuelve la cantidad de bancos/asientos/cupos disponibles de personas
+     * @returns {number}
      */
-    mostrarInformacion(): void {
-        //const relacionUsada =  this.cantidadPersonasActuales/this.capacidadMaximaDePersonas
-        const a = this.nombre
-        const b = this.precioBaseEntrada
-        const c = this.capacidadMaximaDePersonas
-        const d = this.cantidadPersonasActuales
-        const e = this.estado? 'activo' : 'inactivo'
-        console.log(`
-            ┌─────────────────────────────────────┐
-            │             Informacion             │   
-            ├─────────────────────────────────────┤
-            │nombre:            ${a}              │
-            │precio Base:       ${b}              │
-            │capacidad maxima:  ${c}              │
-            │capacidad usada:   ${d}              │
-            │estado:            ${e}              │
-            └─────────────────────────────────────┘
-        `)
+    bancosDisponibles(): number {
+        return this.capacidadMaximaDePersonas - this.cantidadPersonasActuales
+    }
+    /**
+     * devuelve la capacidad maxima de personas
+     * @returns {number}
+     */
+    capacidadMaxima(): number {
+        return this.capacidadMaximaDePersonas
+    }
+    /**
+     * devuelve el estado de la atracción
+     * @returns {boolean}
+     */
+    mostrarInformacion(): boolean {
+        return this.estado
     }
 }

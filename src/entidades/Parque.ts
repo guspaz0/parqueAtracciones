@@ -26,7 +26,7 @@ export class Parque implements IAtraccion {
     }
 
     listarAtracciones(){
-        this.atracciones.forEach(a => a.mostrarInformacion())
+        return this.atracciones
     }
 
     desactivarAtraccion(nombre: string) {

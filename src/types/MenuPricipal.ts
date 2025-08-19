@@ -4,7 +4,5 @@ export enum MainMenuOpt {
     INGRESA_PERSONA = 3,
     ACTIVAR_DESACTIVAR = 4,
     COSTO = 5,
-    ESTADISTICAS = 6,
-    MANTENIMIENTO = 7,
-    SALIR = 8
+    SALIR = 9
 }
